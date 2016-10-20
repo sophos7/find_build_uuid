@@ -9,8 +9,8 @@ set -e
 LOGFILE="/tmp/find_build_uuid_log.txt"
 
 ### Variables from command line ###
-DSYMDIR=$1
-BUILDID=$2
+DSYMDIR=${1}
+BUILDID=${2//-}
 DSYM="empty"
 TEMPID="empty"
 
@@ -37,9 +37,6 @@ fi
 
 ### Open log file with date and time
 date > ${LOGFILE}
-
-### Strip our dashes from build uuid just in case
-BUILDID=${BUILDID//-}
 
 ### Loop through given directory to search each dSYM
 find ${DSYMDIR} -type d -name '*.dSYM' -print0 | while IFS= read -r -d '' DSYM; do
