@@ -14,9 +14,11 @@ https://rpm.newrelic.com/accounts/{ACCOUNT}/mobile/{APP}/crash_reports/{REPORT_I
 
 # How to use
 Run the script with the following arguments to search dSYMs
+
 `./find_build_uuid.sh  FolderWithDSYMs Build_uuid`
 
 Run the script with the following arguments to upload dSYM if found
+
 `./find_build_uuid.sh  FolderWithDSYMs Build_uuid "App Name" AppKeyNumber`
 
 **FolderWithDSYMs** = Path to folder containing dSYM files to be uploaded
