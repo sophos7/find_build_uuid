@@ -2,17 +2,24 @@
 set -e
 ### HOW TO USE ###
 #
-# Run script with following variable
+# Run script with following variables to search dSYMs
 # 		./find_build_uuid.sh  FolderWithDSYMs Build_uuid
+#
+# Run script with following variables to upload dSYM if found
+# 		./find_build_uuid.sh  FolderWithDSYMs Build_uuid "App Name" AppKeyNumber
 
 ### Mostly static variables ###
 LOGFILE="/tmp/find_build_uuid_log.txt"
+ZIP="/usr/bin/zip --recurse-paths --quiet"
+URL="https://mobile-symbol-upload.newrelic.com/symbol"
 
 ### Variables from command line ###
 DSYMDIR=${1}
 BUILDID=${2//-}
 DSYM="empty"
 TEMPID="empty"
+APPNAME=$3
+APPKEY=$4
 
 
 ### Functions for this script ###
@@ -45,6 +52,14 @@ find ${DSYMDIR} -type d -name '*.dSYM' -print0 | while IFS= read -r -d '' DSYM; 
 
 	if [[ ${TEMPID} == *"${BUILDID}"* ]]; then
 		logFile echo "The dSYM file ${DSYM} is for build uuid ${BUILDID}"
+
+		if [[ ${APPNAME} != "" && ${#APPKEY} = 42 ]]; then
+			logFile echo "Uploading dSYM to New Relic"
+			logFile ${ZIP} /tmp/${BUILDID}.zip "${DSYM}"
+			logFile curl -F dsym=@"/tmp/${BUILDID}.zip" -F buildId="${TEMPID}" -F appName="${APPNAME}" -H "X-APP-LICENSE-KEY: ${APPKEY}" ${URL}
+			logFile rm /tmp/${BUILDID}.zip
+		fi
+
 		exit 1
 	fi
 
