@@ -38,7 +38,7 @@ function logFile(){
 }
 
 ### Validate these values a bit
-if [[ ${DSYMDIR} == "" || ${BUILDID} == "" || ${#BUILDID} < 32 ]]; then
+if [[ ${DSYMDIR} == "" || ${BUILDID} == "" ]]; then
 	invalidEntry
 fi
 
